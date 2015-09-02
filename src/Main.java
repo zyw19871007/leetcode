@@ -5,5 +5,6 @@ public class Main {
         Sudoku sudoku = new Sudoku();
         sudoku.init();
         sudoku.initboard();
+        System.out.println(sudoku.getBoard());
     }
 }

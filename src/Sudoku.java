@@ -7,6 +7,9 @@ import java.util.jar.JarEntry;
  * Created by zyw on 2015/8/31.
  */
 public class Sudoku {
+    char[][]board = new char[9][9];
+    DancingLink[][] dancingLinks = new DancingLink[9][9];
+
     /**
      * @param board
      * ["..9748...","7........",".2.1.9...","..7...24.",".64.1.59.",".98...3..","...8.3.2.","........6","...2759.."]
@@ -15,16 +18,6 @@ public class Sudoku {
      */
     public void solveSudoku() {
 
-    }
-
-    class DancingLink {
-        DancingLink left;
-        DancingLink right;
-        DancingLink up;
-        DancingLink down;
-        int col=0;
-        int row=0;
-        char val = '.';
     }
 
     public char[][] getBoard() {
@@ -43,7 +36,6 @@ public class Sudoku {
         this.dancingLinks = dancingLinks;
     }
 
-    char[][]board;
     public void init() {
         board[0] = "..9748...".toCharArray();
         board[1] = "7........".toCharArray();
@@ -77,7 +69,7 @@ public class Sudoku {
         c9.right=head;
 
     }
-    DancingLink[][] dancingLinks = new DancingLink[9][9];
+
     public void initboard() {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
@@ -113,6 +105,16 @@ public class Sudoku {
                 }
             }
         }
+    }
+
+    class DancingLink {
+        DancingLink left;
+        DancingLink right;
+        DancingLink up;
+        DancingLink down;
+        int col=0;
+        int row=0;
+        char val = '.';
     }
 
 }
