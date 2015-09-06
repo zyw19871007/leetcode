@@ -1,4 +1,5 @@
 import com.sun.org.apache.xml.internal.security.Init;
+import sun.plugin2.message.HeartbeatMessage;
 
 import java.util.jar.JarEntry;
 
@@ -7,16 +8,33 @@ import java.util.jar.JarEntry;
  * Created by zyw on 2015/8/31.
  */
 public class Sudoku {
-    char[][]board = new char[9][9];
-    DancingLink[][] dancingLinks = new DancingLink[9][9];
+    public char[][] board = new char[10][9];
+    public DancingLink[][] dancingLinks = new DancingLink[9][9];
 
     /**
-     * @param board
-     * ["..9748...","7........",".2.1.9...","..7...24.",".64.1.59.",".98...3..","...8.3.2.","........6","...2759.."]
-    ["..9748...","7........",".2.1.9...","..7...24.",".64.1.59.",".98...3..","...8.3.2.","........6","...2759.."]
-    ["519748632","783652419","426139875","357986241","264317598","198524367","975863124","832491756","641275983"]
+     * board ["..9748...","7........",".2.1.9...","..7...24.",".64.1.59.",".98...3..","...8.3.2.","........6","...2759.."]
+     *              ["..9748...","7........",".2.1.9...","..7...24.",".64.1.59.",".98...3..","...8.3.2.","........6","...2759.."]
+     *              ["519748632","783652419","426139875","357986241","264317598","198524367","975863124","832491756","641275983"]
      */
     public void solveSudoku() {
+
+    }
+
+    /**
+     * 标示元素C1，指的是标示C1、和C1所在列的所有元素、以及该元素所在行的元素，并从双向链中移除这些元素
+     * @param c
+     */
+    public void mark(DancingLink c) {
+        DancingLink tmp=null;
+        while (tmp != c) {
+            tmp=c.down;
+            //移除行元素
+            if (tmp != c) {
+
+            }
+
+        }
+
 
     }
 
@@ -36,85 +54,70 @@ public class Sudoku {
         this.dancingLinks = dancingLinks;
     }
 
-    public void init() {
-        board[0] = "..9748...".toCharArray();
-        board[1] = "7........".toCharArray();
-        board[2] = ".2.1.9...".toCharArray();
-        board[3] = "..7...24.".toCharArray();
-        board[4] = ".64.1.59.".toCharArray();
-        board[5] = ".98...3..".toCharArray();
-        board[6] = "...8.3.2.".toCharArray();
-        board[7] ="........6".toCharArray();
-        board[8] = "...2759..".toCharArray();
+    public void initBoard() {
+        board[0] = "aaaaaaaaa".toCharArray();
+        board[1] = "..9748...".toCharArray();
+        board[2] = "7........".toCharArray();
+        board[3] = ".2.1.9...".toCharArray();
+        board[4] = "..7...24.".toCharArray();
+        board[5] = ".64.1.59.".toCharArray();
+        board[6] = ".98...3..".toCharArray();
+        board[7] = "...8.3.2.".toCharArray();
+        board[8] = "........6".toCharArray();
+        board[9] = "...2759..".toCharArray();
 
-        DancingLink head = new DancingLink();
-        DancingLink c1 = new DancingLink();
-        DancingLink c2 = new DancingLink();
-        DancingLink c3 = new DancingLink();
-        DancingLink c4 = new DancingLink();
-        DancingLink c5 = new DancingLink();
-        DancingLink c6 = new DancingLink();
-        DancingLink c7 = new DancingLink();
-        DancingLink c8 = new DancingLink();
-        DancingLink c9 = new DancingLink();
-        head.right=c1;
-        c1.right=c2;
-        c2.right=c3;
-        c3.right=c4;
-        c4.right=c5;
-        c5.right=c6;
-        c6.right=c7;
-        c7.right=c8;
-        c8.right=c9;
-        c9.right=head;
 
     }
 
-    public void initboard() {
-        for (int i = 0; i < 9; i++) {
+    public void initDancingLinks() {
+        for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 9; j++) {
+                dancingLinks[i][j] = new DancingLink();
                 dancingLinks[i][j].val = board[i][j];
+                dancingLinks[i][j].col = dancingLinks[0][j];
+                dancingLinks[i][j].row=i;
                 //连接左侧
                 for (int k = 1; k < 10; k++) {
                     if (board[i][(j - k + 10) / 10] != '.') {
-                        dancingLinks[i][j].left=dancingLinks[i][(j - k + 10) / 10];
+                        dancingLinks[i][j].left = dancingLinks[i][(j - k + 10) / 10];
                         break;
                     }
                 }
                 //连接右侧
                 for (int k = 1; k < 10; k++) {
                     if (board[i][(j + k + 10) / 10] != '.') {
-                        dancingLinks[i][j].right=dancingLinks[i][(j + k + 10) / 10];
+                        dancingLinks[i][j].right = dancingLinks[i][(j + k + 10) / 10];
                         break;
                     }
                 }
 
                 //连接上侧
                 for (int k = 1; k < 10; k++) {
-                    if (board[(i-k+10)/10][j] != '.') {
-                        dancingLinks[i][j].up=dancingLinks[(i-k+10)/10][j];
+                    if (board[(i - k + 10) / 10][j] != '.') {
+                        dancingLinks[i][j].up = dancingLinks[(i - k + 10) / 10][j];
                         break;
                     }
                 }
                 //连接下侧
                 for (int k = 1; k < 10; k++) {
-                    if (board[(i+k+10)/10][j] != '.') {
-                        dancingLinks[i][j].down=dancingLinks[(i+k+10)/10][j];
+                    if (board[(i + k + 10) / 10][j] != '.') {
+                        dancingLinks[i][j].down = dancingLinks[(i + k + 10) / 10][j];
                         break;
                     }
                 }
             }
         }
+        DancingLink head = new DancingLink();
+        for (int i = 0; i < 9; i++) {
+            if (i == 0) {
+                head.right = dancingLinks[0][0];
+            } else if (i == 8) {
+                dancingLinks[0][8].right = head;
+            } else {
+                dancingLinks[0][i].right = dancingLinks[0][i + 1];
+            }
+        }
     }
 
-    class DancingLink {
-        DancingLink left;
-        DancingLink right;
-        DancingLink up;
-        DancingLink down;
-        int col=0;
-        int row=0;
-        char val = '.';
-    }
 
 }
